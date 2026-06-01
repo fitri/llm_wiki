@@ -8,3 +8,4 @@ archive/*
 !archive/.gitkeep
 assets/*
 !assets/.gitkeep
+.obsidian/
