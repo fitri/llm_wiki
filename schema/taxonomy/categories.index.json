@@ -1,0 +1,40 @@
+{
+  "categories": [
+    {
+      "name": "ai",
+      "description": "Artificial intelligence, machine learning, and model systems"
+    },
+    {
+      "name": "semiconductor",
+      "description": "Chip design, fabrication, and semiconductor industry"
+    },
+    {
+      "name": "software_engineering",
+      "description": "Software development, architecture, and engineering practices"
+    },
+    {
+      "name": "homelab",
+      "description": "Self-hosted infrastructure and home server setups"
+    },
+    {
+      "name": "career",
+      "description": "Professional development, job search, and workplace skills"
+    },
+    {
+      "name": "leadership",
+      "description": "Management, leadership, and organizational behavior"
+    },
+    {
+      "name": "personal",
+      "description": "Personal knowledge, habits, and self-improvement"
+    },
+    {
+      "name": "finance",
+      "description": "Personal finance, investing, and economics"
+    },
+    {
+      "name": "science",
+      "description": "Scientific concepts, research, and discoveries"
+    }
+  ]
+}

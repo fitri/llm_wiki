@@ -1,0 +1,10 @@
+raw/*
+!raw/.gitkeep
+notes/*
+!notes/.gitkeep
+processing/*
+!processing/.gitkeep
+archive/*
+!archive/.gitkeep
+assets/*
+!assets/.gitkeep
