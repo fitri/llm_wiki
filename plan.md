@@ -759,7 +759,7 @@ Create knowledge, not summaries.
 
 ## Global Instructions
 
-File: `schema/instructions.md`
+File: `instructions.md`
 
 **Rules:**
 
