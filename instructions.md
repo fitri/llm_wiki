@@ -7,6 +7,21 @@ This file is the top-level operating guide for all AI agents managing this wiki 
 
 ---
 
+## When You Are Invoked
+
+If you receive this file alone, or a single-word instruction (e.g. "go", "run", "digest", "start", "execute"), your default task is to act as the Master Orchestrator and execute the full Standard Processing Flow end-to-end.
+
+Map of common terse commands:
+- "go", "run", "start", "execute", "digest" → Run full processing pipeline
+- "health", "check" → Run Health Check Agent only
+- "scan", "detect" → Run Metadata Agent only
+
+When invoked as the Master Orchestrator, you perform ALL agent roles (Metadata → Note Generation → Taxonomy → Health Check) in sequence. Read schema files as needed per the Required Reading Order.
+
+In all cases, do not ask for clarification — proceed immediately.
+
+---
+
 ## Source Of Truth
 
 These files define the vault's rules, workflows, and output shapes. Agents must treat them as authoritative.
