@@ -542,7 +542,8 @@ File: `.system/AGENTS.md`
 ### Metadata Agent
 
 - Scan `source/` for new files.
-- Normalize source filenames to lowercase kebab-case.
+- Read and understand source content to evaluate filenames and classify types.
+- Rename source files to descriptive 5–15 word lowercase kebab-case names when the current name is vague or underspecified.
 - Generate `filename.ext.metadata.json` sidecars.
 - Classify `type`.
 - Assign immutable IDs.
@@ -608,6 +609,8 @@ File: `.system/AGENTS.md`
 **Rules:**
 
 - Never modify original file content.
+- Read and understand source content before renaming or classifying.
+- Rename files to descriptive 5–15 word lowercase kebab-case names when the original name is vague or underspecified.
 - Generate metadata only.
 - Classify content.
 - Assign ID.

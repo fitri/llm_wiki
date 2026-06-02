@@ -76,12 +76,13 @@ When asked to process the vault or when new files appear in `source/`, run the a
 ### Step 1: Metadata Tagging
 
 1. Scan `source/` for files without a corresponding `filename.ext.metadata.json` sidecar.
-2. Normalize source filenames to lowercase kebab-case. Rename the source file if needed. Do not modify file content.
-3. For each new file, generate a metadata sidecar using `.system/templates/file.metadata.json`.
-4. Classify the `type` based on file extension and content.
-5. Assign an immutable `id` using the ID generation standard (see below).
-6. Set `status` to `new` and `created_at` to current Unix epoch seconds.
-7. Write `source/filename.ext.metadata.json`.
+2. **Read and understand the source material.** Determine what the content is about. If the current filename does not accurately describe the content — or is too short, vague, or underspecified (e.g. single words, generic names) — rename it to a descriptive 5–15 word lowercase kebab-case name that reflects the content. This understanding also informs type classification.
+3. Normalize source filenames to lowercase kebab-case. Do not modify file content.
+4. For each new file, generate a metadata sidecar using `.system/templates/file.metadata.json`.
+5. Classify the `type` based on file extension and content.
+6. Assign an immutable `id` using the ID generation standard (see below).
+7. Set `status` to `new` and `created_at` to current Unix epoch seconds.
+8. Write `source/filename.ext.metadata.json`.
 
 ### Step 2: Note Generation
 
@@ -329,7 +330,8 @@ The vault has four specialized agents, each with a corresponding skill file:
 ### Metadata Agent
 
 - Scan `source/` for new files.
-- Normalize source filenames to lowercase kebab-case.
+- Read and understand source content to evaluate filenames and classify types.
+- Rename source files to descriptive 5–15 word lowercase kebab-case names when the current name is vague or underspecified.
 - Generate `filename.ext.metadata.json` sidecars.
 - Classify `type`.
 - Assign immutable IDs.
