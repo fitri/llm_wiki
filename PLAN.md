@@ -16,6 +16,7 @@ Build an AI-assisted knowledge warehouse on top of Obsidian.
 8. The system must work across multiple AI models.
 9. The filesystem is storage, not organization.
 10. Categories and tags are controlled vocabularies.
+11. PLAN.md is the project build guide. No operational file (skills, templates, AGENTS.md, notes) may reference or depend on it.
 
 ---
 

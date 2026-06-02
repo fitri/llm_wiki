@@ -14,21 +14,44 @@ Convert source material into atomic knowledge notes.
 6. Derive each note filename from its title by slugifying the title to lowercase kebab-case.
 7. Assign categories and tags from the taxonomy indexes.
 8. Generate a concise summary for each note.
-9. Link related notes where applicable.
-10. Assign a confidence level to each note.
-11. Verify that each note filename matches the slugified title. If not, rename the file.
-12. Set metadata status to `publish`.
+9. Verify filename-title parity for every generated note — ensure the `slug` field matches the note filename (without `.md`).
+10. Set metadata status to `publish`.
 
 ## Atomic Note Rules
 
-See the full atomic note rules in the implementation plan.
+A knowledge note should contain one reusable idea.
 
-Key rules:
-- One reusable idea per note.
-- Each note must be understandable without reading the full source.
-- Prefer fewer high-quality notes over many shallow notes.
-- Do not force-split. A single source should typically produce one note unless topics are truly too diverse.
-- Titles must be descriptive. Avoid single-word titles unless the word is a recognized proper name. Less than 18 words; aim for fewer, not more.
+**Create a separate note when the source contains:**
+- A distinct concept.
+- A distinct process or workflow.
+- A distinct decision or conclusion.
+- A distinct rule, principle, or best practice.
+- A distinct technical reference.
+- A distinct troubleshooting pattern.
+- A distinct comparison between ideas, tools, or methods.
+- A distinct reusable question-and-answer pair.
+
+**Do not create separate notes for:**
+- Minor details.
+- Repeated statements.
+- Temporary observations.
+- Personal commentary with no reusable value.
+- Source summaries that do not introduce reusable knowledge.
+- Content that only makes sense inside the original document.
+
+Each note must be understandable without reading the full original source.
+
+Each note should answer at least one of these questions:
+1. What is this?
+2. How does this work?
+3. Why does this matter?
+4. When should this be used?
+5. What problem does this solve?
+6. What should be remembered from this?
+
+Prefer fewer high-quality reusable notes over many shallow notes. Do not force-split a single source into multiple notes. Only split when topics are truly too big and diverse to fit in one note.
+
+Titles must be descriptive. Avoid single-word titles unless the word is a recognized proper name. Less than 18 words; aim for fewer, not more. The title alone should inform what the note is about.
 
 ## Filename Rules
 

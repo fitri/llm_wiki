@@ -13,7 +13,7 @@ Maintain vault integrity by detecting and reporting issues.
 - **Invalid Categories** — Detect notes using categories not in `categories.index.json`.
 - **Invalid Tags** — Detect notes using tags not in `tags.index.json`.
 - **Schema Violations** — Detect notes or metadata files that do not follow the defined schema.
-- **Filename-Title Mismatch** — Detect notes whose slugified title (lowercase kebab-case) does not match the note filename.
+- **Filename-Title Mismatch** — Detect notes where the `slug` field in frontmatter does not match the note filename (without `.md`).
 - **Stale Notes** — Detect notes that have not been updated in a long time.
 - **Taxonomy Drift** — Detect duplicate or near-duplicate category/tag entries.
 
