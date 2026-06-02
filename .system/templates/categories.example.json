@@ -1,0 +1,16 @@
+{
+  "categories": [
+    {
+      "name": "ai",
+      "description": "Artificial intelligence, machine learning, and model systems"
+    },
+    {
+      "name": "software_engineering",
+      "description": "Software development, architecture, and engineering practices"
+    },
+    {
+      "name": "homelab",
+      "description": "Self-hosted infrastructure and home server setups"
+    }
+  ]
+}

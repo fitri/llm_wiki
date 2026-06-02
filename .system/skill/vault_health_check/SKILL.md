@@ -7,9 +7,9 @@ Maintain vault integrity by detecting and reporting issues.
 ## Checks
 
 - **Broken Links** — Detect `[[wikilinks]]` that point to non-existent notes.
-- **Missing Metadata** — Detect raw files without corresponding `filename.ext.metadata.json`.
+- **Missing Metadata** — Detect source files without corresponding `filename.ext.metadata.json`.
 - **Orphan Assets** — Detect assets in `assets/` not referenced by any note.
-- **Failed Processing** — Detect metadata sidecars with `status: failed`.
+- **Stalled Processing** — Detect metadata sidecars stuck at `status: digest` that have not progressed to `publish`.
 - **Invalid Categories** — Detect notes using categories not in `categories.index.json`.
 - **Invalid Tags** — Detect notes using tags not in `tags.index.json`.
 - **Schema Violations** — Detect notes or metadata files that do not follow the defined schema.
@@ -21,10 +21,10 @@ Maintain vault integrity by detecting and reporting issues.
 
 - When organizing or renaming files during health check, use lowercase kebab-case.
 - Attachments should use lowercase kebab-case when organized by AI.
-- Raw file content must not be modified.
-- Raw filenames may be normalized or renamed by AI when organizing the vault.
+- Source file content must not be modified.
+- Source filenames may be normalized or renamed by AI when organizing the vault.
 
 ## Output
 
 A report file summarizing all issues found and actions taken.
-Suggested location: `processing/vault-health-check-report.md`.
+Suggested location: `.digest/vault-health-check-report.md`.

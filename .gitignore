@@ -1,9 +1,9 @@
-raw/*
-!raw/.gitkeep
+source/*
+!source/.gitkeep
 notes/*
 !notes/.gitkeep
-processing/*
-!processing/.gitkeep
+.digest/*
+!.digest/.gitkeep
 archive/*
 !archive/.gitkeep
 assets/*

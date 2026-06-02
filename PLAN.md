@@ -25,7 +25,7 @@ Build an AI-assisted knowledge warehouse on top of Obsidian.
 Human
 │
 ▼
-raw/
+source/
 │
 ▼
 metadata_tagging skill
@@ -34,21 +34,21 @@ metadata_tagging skill
 filename.ext.metadata.json
 │
 ▼
-processing/
-│
-▼
-raw_to_note skill
+source_to_note skill
 │
 ▼
 notes/
 │
+▼
+taxonomy_management skill (controlled vocabularies)
 │
-├── taxonomy_management  (controlled vocabularies)
-│
-└── vault_health_check   (validates metadata, taxonomy, filename-title, etc.)
+▼
+vault_health_check skill (validates metadata, taxonomy, etc.)
 │
 ▼
 search + metadata + AI retrieval
+
+.digest/ — temporary AI workspace (OCR, extracted text, intermediate artifacts)
 ```
 
 ---
@@ -58,28 +58,27 @@ search + metadata + AI retrieval
 ```text
 vault/
 │
-├── raw/
-├── processing/
+├── source/
+├── .digest/
 ├── notes/
 ├── assets/
 ├── archive/
 │
-└── schema/
+├── AGENTS.md (symlink → .system/AGENTS.md)
+│
+└── .system/
     │
     ├── templates/
     │   ├── note.md
-    │   └── file.metadata.json
-    │
-    ├── taxonomy/
-    │   ├── categories.index.json
-    │   ├── tags.index.json
-    │   └── aliases.index.json
+    │   ├── file.metadata.json
+    │   ├── categories.example.json
+    │   └── tags.example.json
     │
     ├── skill/
     │   ├── metadata_tagging/
     │   │   └── SKILL.md
     │   │
-    │   ├── raw_to_note/
+    │   ├── source_to_note/
     │   │   └── SKILL.md
     │   │
     │   ├── taxonomy_management/
@@ -88,15 +87,14 @@ vault/
     │   └── vault_health_check/
     │       └── SKILL.md
     │
-    ├── agents.md
-    └── instructions.md
+    └── AGENTS.md
 ```
 
 ---
 
 ## Folder Responsibilities
 
-### raw/
+### source/
 
 **Purpose:** Human ingestion zone.
 
@@ -126,14 +124,14 @@ Users may drop:
 **User action:**
 
 ```text
-Drop file into raw/
+Drop file into source/
 ```
 
 Only.
 
 ---
 
-### processing/
+### .digest/
 
 **Purpose:** Temporary AI workspace.
 
@@ -182,13 +180,13 @@ Contains:
 - deprecated generated notes
 - retired processed content
 
-Raw files are not archived automatically.
+Source files are not archived automatically.
 
 ---
 
 ## Metadata Contract
 
-Every raw file MUST have a sidecar metadata file that includes the original file extension in the metadata filename.
+Every source file MUST have a sidecar metadata file that includes the original file extension in the metadata filename.
 
 ```text
 filename.ext
@@ -206,20 +204,15 @@ manual.pdf.metadata.json
 
 ### Metadata Template
 
-File: `schema/templates/file.metadata.json`
+File: `.system/templates/file.metadata.json`
 
 ```json
 {
   "schema_version": 1,
-  "id": "raw_xxxxxxxx",
-  "created_at": "",
-  "status": "detected",
-  "content_type": "other",
-  "source_type": "other",
-  "processing_attempts": 0,
-  "last_processed_at": null,
-  "generated_notes": [],
-  "error": null
+  "id": "xxxxxxxx",
+  "created_at": "1717369260",
+  "type": "other",
+  "status": "new"
 }
 ```
 
@@ -230,12 +223,18 @@ File: `schema/templates/file.metadata.json`
 Allowed values:
 
 ```text
-detected
-processing
-processed
-failed
-archived
+new     Freshly detected, ready for processing
+digest  Content extraction and note generation in progress
+publish Notes generated and written to notes/
 ```
+
+Lifecycle:
+
+```text
+new ──→ digest ──→ publish
+```
+
+No `failed` status. Files that cannot be processed reset to `new` for retry.
 
 ---
 
@@ -257,45 +256,30 @@ Definitions:
 
 ---
 
-### Content Type Enumeration
+### Type Values
+
+Single field replacing both `content_type` and `source_type`.
 
 Allowed values:
 
 ```text
-text
-pdf
-image
-audio
-video
-url
-chat_export
-email
-other
+text      Plain text, markdown, code files
+webpage   Full web pages, HTML files
+pdf       PDF documents
+image     PNG, JPG, GIF, screenshots, photos
+json      JSON data files
+links     URL collections, link dumps
+documents DOC, DOCX, spreadsheets, presentations, manuals, datasheets
+webclip   Obsidian webclipper content, saved snippets
+audio     MP3, WAV, voice notes
+video     MP4, video content
+chats     Chat exports
+other     Unclassified content
 ```
-
-No additional values permitted without updating schema.
 
 ---
 
-### Source Type Enumeration
-
-Examples:
-
-```text
-youtube_link
-website_link
-manual
-datasheet
-meeting_note
-voice_note
-chatgpt_export
-email_export
-screenshot
-photograph
-other
-```
-
-May expand over time.
+<!-- Source Type Enumeration removed — merged into single Type Values field above -->
 
 ---
 
@@ -306,30 +290,25 @@ All IDs are immutable.
 **Format:**
 
 ```text
-raw_<hash>
-nt_<hash>
+xxxxxxxx  (8-char hex hash, no prefix)
 ```
 
 **Generation:**
 
 ```text
-timestamp
-↓
-hash
-↓
-id
+1. Normalize source filename to lowercase kebab-case
+2. Record created_at as Unix epoch seconds
+3. Hash input:  normalized-filename_epoch
+   Example:     my-manual.pdf_1717369260
+4. SHA-256 → first 8 hex chars
+5. Result:     a7f3b2c1
 ```
 
-**Examples:**
+**Note Inheritance:**
 
-```text
-raw_a1b2c3d4
-nt_f6g7h8i9
-```
+All notes derived from a source inherit the source ID. A single source producing multiple notes → all notes share the same `id` field. The `id` itself traces provenance; `derived_from` is not needed.
 
-No vault lookup required.
-
-No duplicate checking required.
+No vault lookup required. No duplicate checking required.
 
 ---
 
@@ -342,8 +321,8 @@ Words separated by hyphens.
 Examples:
 
 ```text
-raw/my-downloaded-manual.pdf
-raw/youtube-video-about-rag.txt
+source/my-downloaded-manual.pdf
+source/youtube-video-about-rag.txt
 notes/how-transformer-attention-works.md
 assets/transformer-attention-diagram.png
 archive/old-semiconductor-reference.md
@@ -356,27 +335,27 @@ Rules:
 3. Do not use spaces.
 4. Do not use underscores in filenames.
 5. Do not use special characters unless required by the file extension.
-6. Generated note filenames must match the note title. Derive the filename by slugifying the title to lowercase kebab-case. Do not use the raw source name as the filename.
-7. Raw file content must not be edited, but raw filenames may be normalized or renamed by AI when organizing the vault.
+6. Generated note filenames must match the note title. Derive the filename by slugifying the title to lowercase kebab-case. Do not use the source file name as the note filename.
+7. Source file content must not be edited, but source filenames may be normalized or renamed by AI when organizing the vault.
 
 ---
 
 ### Knowledge Note Template
 
-File: `schema/templates/note.md`
+File: `.system/templates/note.md`
 
 ```markdown
 ---
 schema_version: 1
 
-id: nt_xxxxxxxx
+id: "" # Inherits source ID (8-char hex hash)
 
 title: ""
 
 created_at: ""
 updated_at: ""
 
-status: processed
+status: publish
 
 confidence: high
 
@@ -387,9 +366,6 @@ tags:
   -
 
 summary: ""
-
-derived_from:
-  - raw_xxxxxxxx
 
 related_notes:
   -
@@ -426,7 +402,7 @@ Main knowledge content.
 
 ## Sources
 
-- raw_xxxxxxxx
+- xxxxxxxx
 
 ---
 
@@ -458,7 +434,7 @@ Do not create separate notes for:
 2. Repeated statements.
 3. Temporary observations.
 4. Personal commentary with no reusable value.
-5. Raw summaries that do not introduce reusable knowledge.
+5. Source summaries that do not introduce reusable knowledge.
 6. Content that only makes sense inside the original document.
 
 Each note must be understandable without reading the full original source.
@@ -504,7 +480,7 @@ Bad:  A Comprehensive Guide to Container Orchestration Using Kubernetes  (10 wor
 All generated notes must follow:
 
 ```text
-schema/templates/note.md
+.system/templates/note.md
 ```
 
 Generated notes must be standard markdown files.
@@ -524,15 +500,9 @@ Filename: how-transformer-attention-works.md
 
 Categories and tags are controlled vocabularies.
 
+Runtime indexes live in `notes/categories.index.json` and `notes/tags.index.json`. Structure guides are at `.system/templates/categories.example.json` and `.system/templates/tags.example.json`.
+
 Taxonomy values use lowercase snake_case.
-
-**Files:**
-
-```text
-schema/taxonomy/categories.index.json
-schema/taxonomy/tags.index.json
-schema/taxonomy/aliases.index.json
-```
 
 ---
 
@@ -540,23 +510,12 @@ schema/taxonomy/aliases.index.json
 
 Categories represent broad domains.
 
-**Examples:**
-
-```text
-ai
-semiconductor
-software_engineering
-homelab
-career
-leadership
-personal
-finance
-science
-```
-
 **Expected count:** 20-50 categories
 
-AI should prefer existing categories. New category creation should be rare.
+AI should:
+1. Read `.system/templates/categories.example.json` for structure guidance.
+2. Read `notes/categories.index.json` for existing values. Create if missing.
+3. Reuse existing values. New category creation should be rare.
 
 ---
 
@@ -564,110 +523,74 @@ AI should prefer existing categories. New category creation should be rare.
 
 Tags represent concepts.
 
-**Examples:**
-
-```text
-riscv
-docker
-pytest
-transformer
-attention
-rag
-vector_database
-```
-
 Tag count may grow indefinitely.
 
 AI should:
 
-1. Search existing tags.
-2. Reuse if possible.
-3. Create if necessary.
-4. Update `tags.index.json`.
-
----
-
-### Alias Rules
-
-**Purpose:** Prevent vocabulary drift.
-
-**Example:**
-
-```json
-{
-  "llm": "large_language_model",
-  "ml": "machine_learning"
-}
-```
+1. Read `.system/templates/tags.example.json` for structure guidance.
+2. Read `notes/tags.index.json` for existing values. Create if missing.
+3. Search existing tags. Reuse if possible. Create if necessary.
+4. Append new tags to `notes/tags.index.json`.
 
 ---
 
 ## Agent Definitions
 
-File: `schema/agents.md`
+File: `.system/AGENTS.md`
 
 ### Metadata Agent
 
-**Responsibilities:**
+- Scan `source/` for new files.
+- Normalize source filenames to lowercase kebab-case.
+- Generate `filename.ext.metadata.json` sidecars.
+- Classify `type`.
+- Assign immutable IDs.
+- Never modify source file content.
 
-- Scan `raw/`
-- Detect new files
-- Generate metadata
-- Classify `content_type`
-- Classify `source_type`
-
-**Output:** `filename.ext.metadata.json`
+**Skill file:** `.system/skill/metadata_tagging/SKILL.md`
 
 ---
 
 ### Note Generation Agent
 
-**Responsibilities:**
+- Read source material and metadata.
+- Update metadata status to `digest`.
+- Extract and analyze content.
+- Determine knowledge density and decide note count.
+- Generate notes following `.system/templates/note.md`.
+- Derive filename from title (slugify to lowercase kebab-case).
+- Assign categories and tags from taxonomy indexes.
+- Generate summaries and link related notes.
+- Verify filename-title parity before marking `publish`.
 
-- Read raw material
-- Read metadata
-- Extract content
-- Determine knowledge density
-- Decide note count
-- Generate notes
-- Assign categories
-- Assign tags
-- Generate summaries
-- Create links
-- Derive note filename from title (slugify to lowercase kebab-case)
-- Verify filename-title parity before marking processed
-- Update `generated_notes`
-
-**Output:** `notes/*.md`
+**Skill file:** `.system/skill/source_to_note/SKILL.md`
 
 ---
 
 ### Taxonomy Agent
 
-**Responsibilities:**
+- Manage `notes/categories.index.json` and `notes/tags.index.json`.
+- Search existing values before creating new ones.
+- Prevent duplicate entries.
+- Normalize vocabulary.
 
-- Manage categories index
-- Manage tags index
-- Manage aliases
-- Prevent duplicates
-- Normalize vocabulary
+**Skill file:** `.system/skill/taxonomy_management/SKILL.md`
 
 ---
 
 ### Health Check Agent
 
-**Responsibilities:**
+- Detect orphan assets.
+- Detect broken links.
+- Detect missing metadata.
+- Detect failed processing.
+- Detect invalid categories and tags.
+- Detect schema violations.
+- Detect filename-title mismatches.
+- Detect stale notes.
+- Detect taxonomy drift.
 
-- Detect orphan assets
-- Detect broken links
-- Detect missing metadata
-- Detect failed processing
-- Detect invalid categories
-- Detect invalid tags
-- Detect schema violations
-- Detect filename-title mismatches
-- Detect stale notes
-- Detect taxonomy drift
+**Skill file:** `.system/skill/vault_health_check/SKILL.md`
 
 ---
 
@@ -677,7 +600,7 @@ File: `schema/agents.md`
 
 **Purpose:** Generate metadata sidecar files.
 
-**Input:** `raw/*`
+**Input:** `source/*`
 
 **Output:** `filename.ext.metadata.json`
 
@@ -692,9 +615,9 @@ File: `schema/agents.md`
 
 ---
 
-### raw_to_note/SKILL.md
+### source_to_note/SKILL.md
 
-**Purpose:** Convert raw material into atomic knowledge notes.
+**Purpose:** Convert source material into atomic knowledge notes.
 
 **Responsibilities:**
 
@@ -710,7 +633,7 @@ File: `schema/agents.md`
 
 1. Generated notes must use lowercase kebab-case filenames.
 2. Notes must use `.md` extension.
-3. Note filenames must match note titles. Derive the filename by slugifying the title to lowercase kebab-case. Do not use the raw source name as the filename.
+3. Note filenames must match note titles. Derive the filename by slugifying the title to lowercase kebab-case. Do not use the source file name as the note filename.
 
 **Guiding principle:**
 
@@ -722,14 +645,15 @@ Create knowledge, not summaries.
 
 ### taxonomy_management/SKILL.md
 
-**Purpose:** Manage controlled vocabulary.
+**Purpose:** Manage controlled vocabulary for categories and tags.
 
 **Responsibilities:**
 
-- Reuse existing categories
-- Reuse existing tags
+- Read `.system/templates/*.example.json` for structure guidance
+- Read `notes/categories.index.json` and `notes/tags.index.json` for existing values
+- Reuse existing categories and tags
 - Create new values only when required
-- Update taxonomy indexes
+- Append new values to runtime indexes in `notes/`
 
 ---
 
@@ -752,18 +676,18 @@ Create knowledge, not summaries.
 
 1. When organizing or renaming files during health check, use lowercase kebab-case.
 2. Attachments should use lowercase kebab-case when organized by AI.
-3. Raw file content must not be modified.
-4. Raw filenames may be normalized or renamed by AI when organizing the vault.
+3. Source file content must not be modified.
+4. Source filenames may be normalized or renamed by AI when organizing the vault.
 
 ---
 
 ## Global Instructions
 
-File: `instructions.md`
+File: `.system/AGENTS.md`
 
 **Rules:**
 
-1. Never modify raw file content. Raw filenames may be normalized or renamed when organizing the vault.
+1. Never modify source file content. Source filenames may be normalized or renamed when organizing the vault.
 2. Always preserve provenance.
 3. Always generate atomic notes.
 4. Prefer existing taxonomy values.
@@ -779,7 +703,7 @@ File: `instructions.md`
 14. Search and metadata are primary retrieval methods.
 15. Folder hierarchy must not be used for organization.
 16. Note titles must be descriptive. Avoid single-word titles unless the word is a recognized proper name. Less than 18 words; aim for fewer, not more. The title alone should inform what the note is about.
-17. Note filenames must match note titles. Derive the filename by slugifying the title to lowercase kebab-case and appending `.md`. Do not use the raw source name as the filename.
+17. Note filenames must match note titles. Derive the filename by slugifying the title to lowercase kebab-case and appending `.md`. Do not use the source file name as the note filename.
 
 ---
 
@@ -787,16 +711,14 @@ File: `instructions.md`
 
 Every processed note must pass these automated checks before the vault is considered healthy:
 
-1. **Metadata Sidecar Exists** — Every raw file has a `filename.ext.metadata.json` sidecar.
-2. **Metadata Status is Processed** — The sidecar status is `processed`, not `detected` or `failed`.
-3. **Generated Notes Populated** — The `generated_notes` array in the metadata contains at least one note ID.
-4. **Note ID Matches Metadata** — Each note's frontmatter `id` exists in its source metadata `generated_notes`.
-5. **Note Title is Descriptive** — Title avoids single-word (unless proper name), is less than 18 words.
-6. **Filename Matches Title** — The note filename equals the slugified title: lowercase kebab-case + `.md`.
-7. **Categories Exist in Taxonomy** — All note categories are present in `categories.index.json`.
-8. **Tags Exist in Taxonomy** — All note tags are present in `tags.index.json`.
-9. **Raw Content Not Modified** — The original raw file was never edited.
-10. **Wikilinks Resolve** — All `[[wikilinks]]` point to existing notes.
+1. **Metadata Sidecar Exists** — Every source file has a `filename.ext.metadata.json` sidecar.
+2. **Metadata Status is Publish** — The sidecar status is `publish`.
+3. **Note Title is Descriptive** — Title avoids single-word (unless proper name), is less than 18 words.
+4. **Filename Matches Title** — The note filename equals the slugified title: lowercase kebab-case + `.md`.
+5. **Categories Exist in Taxonomy** — All note categories are present in `categories.index.json`.
+6. **Tags Exist in Taxonomy** — All note tags are present in `tags.index.json`.
+7. **Source Content Not Modified** — The original source file was never edited.
+8. **Wikilinks Resolve** — All `[[wikilinks]]` point to existing notes.
 
 These checks are enforced by the **Vault Health Check Agent** and may be run on demand or as part of a CI/CD pipeline.
 
@@ -806,13 +728,13 @@ These checks are enforced by the **Vault Health Check Agent** and may be run on 
 
 The system is considered successful when:
 
-1. User only drops files into `raw/`.
+1. User only drops files into `source/`.
 2. Metadata is generated automatically.
-3. AI converts raw material into atomic knowledge notes.
+3. AI converts source material into atomic knowledge notes.
 4. Categories and tags remain controlled.
 5. Every note is traceable to its source.
 6. Generated notes pass filename-title parity checks.
-7. Processed metadata points to generated note IDs.
+7. Notes inherit the source ID and provenance is traceable.
 8. Health check finds no schema, taxonomy, metadata, or filename-title violations.
 9. Search remains effective at large scale.
 10. Vault scales beyond 100,000 notes without structural redesign.

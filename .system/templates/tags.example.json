@@ -1,0 +1,16 @@
+{
+  "tags": [
+    {
+      "name": "transformer",
+      "description": "Transformer neural network architecture"
+    },
+    {
+      "name": "docker",
+      "description": "Docker container platform and tooling"
+    },
+    {
+      "name": "rag",
+      "description": "Retrieval-Augmented Generation"
+    }
+  ]
+}

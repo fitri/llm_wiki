@@ -1,14 +1,14 @@
 ---
 schema_version: 1
 
-id: nt_xxxxxxxx
+id: "" # Inherits source ID (8-char hex hash)
 
 title: "" # Descriptive, avoid single-word unless proper name, less than 18 words.
 
 created_at: ""
 updated_at: ""
 
-status: processed
+status: publish
 
 confidence: high
 
@@ -20,8 +20,7 @@ tags:
 
 summary: ""
 
-derived_from:
-  - raw_xxxxxxxx
+# Provenance is through the inherited source ID above
 
 related_notes:
   -
@@ -58,7 +57,7 @@ Main knowledge content.
 
 ## Sources
 
-- raw_xxxxxxxx
+- xxxxxxxx
 
 ---
 

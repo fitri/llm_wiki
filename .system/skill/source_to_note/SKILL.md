@@ -1,14 +1,14 @@
-# Raw to Note Skill
+# Source to Note Skill
 
 ## Purpose
 
-Convert raw material into atomic knowledge notes.
+Convert source material into atomic knowledge notes.
 
 ## Workflow
 
-1. Read a raw file from `raw/` that has `status: detected` or `status: failed`.
-2. Update metadata status to `processing`.
-3. Extract and analyze content from the raw file.
+1. Read a source file from `source/` that has `status: new`.
+2. Update metadata status to `digest`.
+3. Extract and analyze content from the source file.
 4. Determine knowledge density and decide note count.
 5. Generate one or more knowledge notes following the atomic note rules.
 6. Derive each note filename from its title by slugifying the title to lowercase kebab-case.
@@ -16,9 +16,8 @@ Convert raw material into atomic knowledge notes.
 8. Generate a concise summary for each note.
 9. Link related notes where applicable.
 10. Assign a confidence level to each note.
-11. Update `generated_notes` in the metadata sidecar with note IDs.
-12. Verify that each note filename matches the slugified title. If not, rename the file.
-13. Set metadata status to `processed`.
+11. Verify that each note filename matches the slugified title. If not, rename the file.
+12. Set metadata status to `publish`.
 
 ## Atomic Note Rules
 
@@ -45,7 +44,7 @@ Create knowledge, not summaries.
 
 ## Template
 
-All generated notes must follow `schema/templates/note.md`.
+All generated notes must follow `.system/templates/note.md`.
 
 ## Output
 
