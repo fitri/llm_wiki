@@ -348,7 +348,7 @@ The vault has four specialized agents, each with a corresponding skill file:
 - Generate notes following `.system/templates/note.md`.
 - Derive filename from title (slugify to lowercase kebab-case).
 - Assign categories and tags from taxonomy indexes.
-- Generate summaries and link related notes.
+- Generate summaries.
 - Verify filename-title parity before marking `publish`.
 
 **Skill file:** `.system/skill/source_to_note/SKILL.md`
