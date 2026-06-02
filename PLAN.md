@@ -52,6 +52,19 @@ search + metadata + AI retrieval
 .digest/ — temporary AI workspace (OCR, extracted text, intermediate artifacts)
 ```
 
+## Usage / Invocation
+
+After dropping a file into `source/`, invoke the pipeline by running:
+
+```text
+opencode run "digest"
+```
+
+OpenCode reads `AGENTS.md` (the operating guide) and executes the four-stage
+pipeline: metadata tagging → note generation → taxonomy management → vault
+health check. Any prompt indicating agent activation (e.g. "digest", "run",
+"process the vault") will trigger the same flow.
+
 ---
 
 ## Vault Structure

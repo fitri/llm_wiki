@@ -68,8 +68,11 @@ wiki/
 
 1. Open this vault in Obsidian.
 2. Drop files (PDF, TXT, URLs, images, chat exports) into `source/`.
-3. Run the metadata agent to generate sidecars.
-4. Run the note generation agent to create knowledge notes.
-5. Run the health check agent to validate output.
+3. Run opencode with an activation prompt:
+   ```
+   opencode run "digest"
+   ```
+   Or any prompt like "process the vault", "run the agents" — OpenCode reads
+   `AGENTS.md` and orchestrates the full pipeline automatically.
 
 No manual tagging, no frontmatter editing, no folder organization required.
