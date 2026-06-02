@@ -252,24 +252,6 @@ No `failed` status. Files that cannot be processed reset to `new` for retry.
 
 ---
 
-### Confidence Values
-
-Allowed values:
-
-```text
-high
-medium
-low
-```
-
-Definitions:
-
-1. `high` means the note is strongly supported by the source material.
-2. `medium` means the note is mostly supported but has some uncertainty.
-3. `low` means the note is useful but requires human review.
-
----
-
 ### Type Values
 
 Single field replacing both `content_type` and `source_type`.
@@ -360,30 +342,14 @@ File: `.system/templates/note.md`
 
 ```markdown
 ---
-schema_version: 1
-
-id: "" # Inherits source ID (8-char hex hash)
-
-title: ""
-
-created_at: ""
-updated_at: ""
-
-status: publish
-
-confidence: high
-
+id: ""
+slug: ""
+date: ""
 categories:
   -
-
 tags:
   -
-
 summary: ""
-
-related_notes:
-  -
-
 ---
 
 # {{title}}
@@ -405,24 +371,6 @@ related_notes:
 ## Details
 
 Main knowledge content.
-
----
-
-## Related Notes
-
-- [[Related Note]]
-
----
-
-## Sources
-
-- xxxxxxxx
-
----
-
-## AI Notes
-
-Generated from source material.
 ```
 
 ---
@@ -575,7 +523,7 @@ File: `.system/AGENTS.md`
 - Generate notes following `.system/templates/note.md`.
 - Derive filename from title (slugify to lowercase kebab-case).
 - Assign categories and tags from taxonomy indexes.
-- Generate summaries and link related notes.
+- Generate summaries.
 - Verify filename-title parity before marking `publish`.
 
 **Skill file:** `.system/skill/source_to_note/SKILL.md`
@@ -714,13 +662,13 @@ File: `.system/AGENTS.md`
 8. Prefer factual statements.
 9. Prefer permanent knowledge over temporary observations.
 10. Every note must contain a summary.
-11. Every note must contain source references.
-12. Every note must have categories and tags.
-13. Every note must have a unique ID.
+11. Every note must have categories and tags.
+12. Every note must have a unique ID.
+13. The `slug` field in frontmatter must match the note filename (without `.md`).
 14. Search and metadata are primary retrieval methods.
-15. Folder hierarchy must not be used for organization.
-16. Note titles must be descriptive. Avoid single-word titles unless the word is a recognized proper name. Less than 18 words; aim for fewer, not more. The title alone should inform what the note is about.
-17. Note filenames must match note titles. Derive the filename by slugifying the title to lowercase kebab-case and appending `.md`. Do not use the source file name as the note filename.
+14. Folder hierarchy must not be used for organization.
+15. Note titles must be descriptive. Avoid single-word titles unless the word is a recognized proper name. Less than 18 words; aim for fewer, not more. The title alone should inform what the note is about.
+16. Note filenames must match note titles. Derive the filename by slugifying the title to lowercase kebab-case and appending `.md`. Do not use the source file name as the note filename.
 
 ---
 
@@ -731,11 +679,10 @@ Every processed note must pass these automated checks before the vault is consid
 1. **Metadata Sidecar Exists** — Every source file has a `filename.ext.metadata.json` sidecar.
 2. **Metadata Status is Publish** — The sidecar status is `publish`.
 3. **Note Title is Descriptive** — Title avoids single-word (unless proper name), is less than 18 words.
-4. **Filename Matches Title** — The note filename equals the slugified title: lowercase kebab-case + `.md`.
+4. **Slug Matches Filename** — The `slug` field in frontmatter matches the note filename (without `.md`).
 5. **Categories Exist in Taxonomy** — All note categories are present in `categories.index.json`.
 6. **Tags Exist in Taxonomy** — All note tags are present in `tags.index.json`.
 7. **Source Content Not Modified** — The original source file was never edited.
-8. **Wikilinks Resolve** — All `[[wikilinks]]` point to existing notes.
 
 These checks are enforced by the **Vault Health Check Agent** and may be run on demand or as part of a CI/CD pipeline.
 
