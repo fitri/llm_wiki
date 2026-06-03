@@ -88,7 +88,7 @@ When asked to process the vault or when new files appear in `source/`, run the a
 
 1. Find source files in `source/` with `status: new` in their metadata sidecar.
 2. Update the metadata `status` from `new` to `digest`.
-3. Read and analyze the source file content.
+3. Read and analyze the source file content. If the source is a `chats`, `webclip`, or `links` type with conversational content between a human and an LLM, apply the chat processing rules in `.system/skill/source_to_note/SKILL.md`.
 4. Determine knowledge density. Decide how many atomic notes to produce.
 5. Generate one or more notes in `notes/` following `.system/templates/note.md`.
 6. Derive each note filename from its title by slugifying to lowercase kebab-case.
