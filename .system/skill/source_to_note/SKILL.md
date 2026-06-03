@@ -63,7 +63,7 @@ Example: A note titled "How Transformer Attention Works" becomes `how-transforme
 
 ## Guiding Principle
 
-Create knowledge, not summaries.
+Create knowledge details notes, not summaries.
 
 ## Template
 
