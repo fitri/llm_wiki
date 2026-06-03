@@ -12,20 +12,18 @@ Metadata Agent — scans source/, normalizes filenames, generates sidecars
     │
     ▼
 filename.ext.metadata.json  (status: new)
-    │                                     
-    ▼                          (status: pending → content added → re-enter)
-Note Generation Agent — extracts content, generates atomic notes in notes/
-                      └── Concept Linking Pass — identifies concepts, inserts [[wikilinks]]
-                          └── Concept gaps → auto-create stub notes (type: auto, status: pending)
     │
     ▼
-notes/*.md  (status: publish / status: pending for auto stubs)
+Note Generation Agent — extracts content, generates atomic notes in notes/
+    │
+    ▼
+notes/*.md  (status: publish)
     │
     ▼
 Taxonomy Agent — manages controlled vocabularies in notes/categories.index.json and notes/tags.index.json
     │
     ▼
-Health Check Agent — validates metadata, concept gaps, pending stubs, taxonomy, schema, filename-title parity
+Health Check Agent — validates metadata, links, taxonomy, schema, filename-title parity
     │
     ▼
 Vault is healthy → search + metadata + AI retrieval
@@ -77,7 +75,7 @@ When asked to process the vault or when new files appear in `source/`, run the a
 
 ### Step 1: Metadata Tagging
 
-1. Scan `source/` for files without a corresponding `filename.ext.metadata.json` sidecar, or files with metadata `status: pending` that have been updated with new content.
+1. Scan `source/` for files without a corresponding `filename.ext.metadata.json` sidecar.
 2. **Read and understand the source material.** Determine what the content is about. If the current filename does not accurately describe the content — or is too short, vague, or underspecified (e.g. single words, generic names) — rename it to a descriptive 5–15 word lowercase kebab-case name that reflects the content. This understanding also informs type classification.
 3. Normalize source filenames to lowercase kebab-case. Do not modify file content.
 4. For each new file, generate a metadata sidecar using `.system/templates/file.metadata.json`.
@@ -95,15 +93,8 @@ When asked to process the vault or when new files appear in `source/`, run the a
 5. Generate one or more notes in `notes/` following `.system/templates/note.md`.
 6. Derive each note filename from its title by slugifying to lowercase kebab-case.
 7. Assign `categories` and `tags` using the taxonomy indexes. If indexes don't exist, create them following the example templates.
-8. **Concept Linking Pass** — Scan each generated note for important concepts (technical terms, tools, frameworks, methodologies, protocols, standards, domain-specific terminology). Insert `[[wikilinks]]` inline using lowercase kebab-case targets. For each wikilink target:
-   - If `notes/target-name.md` exists → link only.
-   - If `notes/target-name.md` does **not** exist → auto-create a stub:
-     1. Create `source/target-name.md` with content `# Target Name\n\n## Summary\n\nTo be updated.`
-     2. Create metadata sidecar with `type: auto`, `status: pending`.
-     3. Invoke the pipeline for this file to generate `notes/target-name.md` following the note template with placeholder content.
-     4. Report back to the main agent.
-9. Verify filename-title parity for every generated note — ensure the `slug` field matches the note filename (without `.md`).
-10. Set metadata `status` to `publish`.
+8. Verify filename-title parity for every generated note — ensure the `slug` field matches the note filename (without `.md`).
+9. Set metadata `status` to `publish`.
 
 ### Step 3: Taxonomy Management
 
@@ -153,7 +144,6 @@ new ──→ digest ──→ publish
 - `new` — Freshly detected, ready for processing.
 - `digest` — Content extraction and note generation in progress.
 - `publish` — Notes generated and written to `notes/`.
-- `pending` — Auto-created concept stub awaiting human content. When content is added, the file re-enters the pipeline at `status: new`.
 
 There is no `failed` status. Files that cannot be processed reset to `new` for retry.
 
@@ -172,7 +162,6 @@ There is no `failed` status. Files that cannot be processed reset to `new` for r
 | `audio` | MP3, WAV, voice notes |
 | `video` | MP4, video content |
 | `chats` | Chat exports |
-| `auto` | Auto-generated concept link placeholder |
 | `other` | Unclassified content |
 
 
@@ -360,7 +349,6 @@ The vault has four specialized agents, each with a corresponding skill file:
 - Derive filename from title (slugify to lowercase kebab-case).
 - Assign categories and tags from taxonomy indexes.
 - Generate summaries.
-- Perform Concept Linking Pass — identify concepts, insert [[wikilinks]], auto-create stubs for gaps.
 - Verify filename-title parity before marking `publish`.
 
 **Skill file:** `.system/skill/source_to_note/SKILL.md`
@@ -385,8 +373,6 @@ The vault has four specialized agents, each with a corresponding skill file:
 - Detect filename-title mismatches.
 - Detect stale notes.
 - Detect taxonomy drift.
-- Detect concept gaps — [[wikilinks]] pointing to non-existent notes (informational).
-- Detect pending stubs — `type: auto` notes with `status: pending` awaiting content (warning).
 
 **Skill file:** `.system/skill/vault_health_check/SKILL.md`
 
@@ -411,7 +397,6 @@ The vault has four specialized agents, each with a corresponding skill file:
 15. Folder hierarchy must not be used for organization.
 16. Note titles must be descriptive. Avoid single-word titles unless the word is a recognized proper name. Less than 18 words; aim for fewer, not more. The title alone should inform what the note is about.
 17. Note filenames must match note titles. Derive the filename by slugifying the title to lowercase kebab-case and appending `.md`. Do not use the source file name as the note filename.
-18. All wikilinks must use lowercase kebab-case target format. Convert multi-word concepts to hyphenated lowercase: `[[attention-mechanism]]` not `[[attention mechanism]]`.
 
 ---
 
@@ -433,8 +418,6 @@ These checks are enforced by the **Health Check Agent**. Additional checks:
 - Taxonomy drift — duplicate or near-duplicate category/tag entries.
 - Schema violations — notes or metadata files that do not follow the defined schema.
 - Stale notes — notes that have not been updated in a long time.
-- Concept gaps — `[[wikilinks]]` pointing to non-existent notes (informational).
-- Pending stubs — `type: auto` notes with `status: pending` awaiting content (warning).
 
 The health check produces a report at `.digest/vault-health-check-report.md`.
 
