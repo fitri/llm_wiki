@@ -67,6 +67,21 @@ health check. Any prompt indicating agent activation (e.g. "digest", "run",
 
 ---
 
+## Bulk Processing
+
+When the pipeline processes multiple source files at once, each file must be handled by a dedicated subagent with a clean context. This prevents context decay that occurs when a single agent processes multiple files sequentially.
+
+**Flow:**
+1. Scan `source/` for files without metadata sidecars.
+2. Launch one subagent per file — each processes Step 1 (metadata) and Step 2 (note generation) independently.
+3. All subagents run in parallel with no cap on concurrency.
+4. Subagents terminate on completion — results go directly to `source/` (sidecars) and `notes/` (notes).
+5. After all subagents complete, a single agent runs Step 3 (Taxonomy Management) then Step 4 (Vault Health Check).
+
+**Rationale:** Metadata tagging and note generation have no cross-file dependencies. Each file produces its own independent sidecar and notes. Taxonomies and health checks must see the complete vault, so they remain sequential.
+
+---
+
 ## Vault Structure
 
 ```text

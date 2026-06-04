@@ -97,6 +97,17 @@ When asked to process the vault or when new files appear in `source/`, run the a
 8. Verify filename-title parity for every generated note — ensure the `slug` field matches the note filename (without `.md`).
 9. Set metadata `status` to `publish`.
 
+### Bulk Processing
+
+When `source/` contains multiple unprocessed files, avoid processing them sequentially in a single agent — context decay will degrade output quality past the first few files. Instead, use parallel subagents:
+
+1. **Scan** — List all files in `source/` that lack a metadata sidecar.
+2. **Dispatch** — Launch one subagent per file using the `task` tool. Each subagent processes exactly one file through Step 1 (metadata) and Step 2 (note generation) with a clean, fresh context.
+3. **Launch all simultaneously** — No cap on parallelism. Each subagent is independent — no cross-file dependencies at this stage.
+4. **Terminate** — Subagents terminate automatically on completion. Results accumulate in `source/` (sidecars) and `notes/` (notes).
+5. **Wait for all** — Do not proceed to Step 3 until every subagent has completed.
+6. **Taxonomy + Health** — Run Step 3 (Taxonomy Management) then Step 4 (Vault Health Check) sequentially as a single agent.
+
 ### Step 3: Taxonomy Management
 
 1. Ensure `notes/categories.index.json` and `notes/tags.index.json` exist. If not, create them following `.system/templates/categories.example.json` and `.system/templates/tags.example.json`.

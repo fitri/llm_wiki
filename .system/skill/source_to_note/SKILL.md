@@ -4,6 +4,8 @@
 
 Convert source material into atomic knowledge notes.
 
+**Context:** This skill is designed for single-file processing. Each invocation handles exactly one source file. When multiple files are present, run one instance per file as a parallel subagent with fresh context.
+
 ## Workflow
 
 1. Read a source file from `source/` that has `status: new`.

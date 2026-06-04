@@ -4,6 +4,8 @@
 
 Generate metadata sidecar files for source materials without modifying source file content.
 
+**Context:** This skill is designed for single-file processing. Each invocation handles exactly one source file. When multiple files are present, run one instance per file as a parallel subagent with fresh context.
+
 ## Workflow
 
 1. Scan `source/` for files without corresponding `filename.ext.metadata.json`.
