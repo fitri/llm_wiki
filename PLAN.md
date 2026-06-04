@@ -562,7 +562,7 @@ File: `.system/AGENTS.md`
 - Detect missing metadata.
 - Detect failed processing.
 - Detect invalid categories and tags.
-- Detect schema violations.
+- Detect frontmatter YAML violations (invalid YAML, missing fields, empty fields, wrong types, duplicate IDs, missing body sections).
 - Detect filename-title mismatches.
 - Detect stale notes.
 - Detect taxonomy drift.
@@ -648,7 +648,12 @@ Create knowledge, not summaries.
 - failed processing
 - invalid categories
 - invalid tags
-- schema violations
+- yaml validity
+- frontmatter field presence
+- frontmatter field non-empty
+- frontmatter field types
+- duplicate ids
+- body section completeness
 - filename-title mismatches
 - stale notes
 - taxonomy drift
@@ -702,6 +707,9 @@ Every processed note must pass these automated checks before the vault is consid
 8. **No Banned Patterns** — Title/source filename contains no hex strings, UUIDs, numeric-dominant words, or single-letter words.
 9. **Minimum Meaningful Words** — Title/source filename has ≥ 3 non-stop words.
 10. **Stop-Word Ratio** — Title/source filename has ≥ 50% meaningful words.
+11. **Frontmatter YAML Valid** — Note frontmatter is valid, parseable YAML.
+12. **Frontmatter Completeness** — All 6 fields (`id`, `slug`, `date`, `categories`, `tags`, `summary`) present, non-empty, and correct types.
+13. **No Duplicate IDs** — No two notes share the same `id`.
 
 These checks are enforced by the **Vault Health Check Agent** and may be run on demand or as part of a CI/CD pipeline.
 

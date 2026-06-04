@@ -12,7 +12,15 @@ Maintain vault integrity by detecting and reporting issues.
 - **Stalled Processing** — Detect metadata sidecars stuck at `status: digest` that have not progressed to `publish`.
 - **Invalid Categories** — Detect notes using categories not in `categories.index.json`.
 - **Invalid Tags** — Detect notes using tags not in `tags.index.json`.
-- **Schema Violations** — Detect notes or metadata files that do not follow the defined schema.
+- **YAML Validity** — For every `.md` file in `notes/`, verify the frontmatter delimited by `---` is valid, parseable YAML. Notes with broken YAML are reported with the parse error. No further checks are run on that note.
+- **Frontmatter Field Presence** — Every note must have all 6 required fields: `id`, `slug`, `date`, `categories`, `tags`, `summary`. Missing fields are reported. Run after YAML is successfully parsed.
+- **Frontmatter Field Non-Empty** — Every field must have a non-empty value. Strings (`id`, `slug`, `date`, `summary`) must not be `""` or whitespace-only. Lists (`categories`, `tags`) must have ≥ 1 entry. Entries must not be empty.
+- **Frontmatter Field Types** — `id`, `slug`, `date`, `summary` must be strings. `categories` and `tags` must be lists. Wrong types are flagged.
+- **Duplicate IDs** — No two notes may share the same `id`. Report conflicting filenames and the shared ID.
+- **Body Has Title** — Every note must contain a `# <title>` heading on the first content line after the closing `---`. Missing or empty heading text is flagged.
+- **Body Has Summary** — Every note must contain a `## Summary` heading.
+- **Body Has Core Concepts** — Every note must contain a `## Core Concepts` heading.
+- **Body Has Details** — Every note must contain a `## Details` heading.
 - **Filename-Title Mismatch** — Detect notes where the `slug` field in frontmatter does not match the note filename (without `.md`).
 - **Stale Notes** — Detect notes that have not been updated in a long time.
 - **Taxonomy Drift** — Detect duplicate or near-duplicate category/tag entries.

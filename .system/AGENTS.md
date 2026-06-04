@@ -406,12 +406,15 @@ Every processed note must pass these checks before the vault is considered healt
 8. **No Banned Patterns** — Title/source filename contains no hex strings, UUIDs, numeric-dominant words, or single-letter words (see `.system/templates/naming-conventions.md` Check A).
 9. **Minimum Meaningful Words** — Title/source filename has ≥ 3 non-stop words (see naming-conventions.md Check B).
 10. **Stop-Word Ratio** — Title/source filename has ≥ 50% meaningful words (see naming-conventions.md Check C).
+11. **Frontmatter YAML Valid** — Note frontmatter is valid, parseable YAML.
+12. **Frontmatter Completeness** — All 6 fields (`id`, `slug`, `date`, `categories`, `tags`, `summary`) present, non-empty, and correct types.
+13. **No Duplicate IDs** — No two notes share the same `id`.
 
 These checks are enforced by the **Health Check Agent**. Additional checks:
 - Stalled processing — metadata sidecars stuck at `status: digest`.
 - Orphan assets — files in `assets/` not referenced by any note.
 - Taxonomy drift — duplicate or near-duplicate category/tag entries.
-- Schema violations — notes or metadata files that do not follow the defined schema.
+- Frontmatter and body section violations — notes missing required frontmatter fields, body sections, or having invalid YAML.
 - Stale notes — notes that have not been updated in a long time.
 
 The health check produces a report at `.digest/vault-health-check-report.md`.
