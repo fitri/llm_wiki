@@ -409,6 +409,7 @@ Every processed note must pass these checks before the vault is considered healt
 11. **Frontmatter YAML Valid** — Note frontmatter is valid, parseable YAML.
 12. **Frontmatter Completeness** — All 6 fields (`id`, `slug`, `date`, `categories`, `tags`, `summary`) present, non-empty, and correct types.
 13. **No Duplicate IDs** — No two notes share the same `id`.
+14. **Filename Character Limit** — Source filename and note filename (without extension) ≤ 255 characters.
 
 These checks are enforced by the **Health Check Agent**. Additional checks:
 - Stalled processing — metadata sidecars stuck at `status: digest`.

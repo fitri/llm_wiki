@@ -51,7 +51,7 @@ Each note should answer at least one of these questions:
 
 Prefer fewer high-quality reusable notes over many shallow notes. Do not force-split a single source into multiple notes. Only split when topics are truly too big and diverse to fit in one note.
 
-Titles must follow `.system/templates/naming-conventions.md`: 4-12 meaningful words, lead with dominant concept. Run the meaningfulness self-check (Check A/B/C in naming-conventions.md) on every title before writing. The title alone should inform what the note is about.
+Titles must follow `.system/templates/naming-conventions.md`: 4-12 meaningful words, lead with dominant concept. Run the self-check (Checks A/B/C/D in naming-conventions.md) on every title before writing. The title alone should inform what the note is about.
 
 ## Chat Processing
 

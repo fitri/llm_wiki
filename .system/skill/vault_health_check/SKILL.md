@@ -28,6 +28,7 @@ Maintain vault integrity by detecting and reporting issues.
   - Lowercase kebab-case format.
   - 4-12 words.
   - Passes meaningfulness checks (A: no banned patterns, B: ≥ 3 non-stop words, C: ≥ 50% meaningful ratio). Use the stop-word list in naming-conventions.md for checks B and C.
+  - Check D: ≤ 255 characters (basename, excluding extension).
 
 ## Filename Rules
 

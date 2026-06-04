@@ -18,10 +18,11 @@ Generate metadata sidecar files for source materials without modifying source fi
 
 ## Self-Check
 
-Before finalizing the renamed source filename, run the meaningfulness checks in `.system/templates/naming-conventions.md`:
+Before finalizing the renamed source filename, run the checks in `.system/templates/naming-conventions.md`:
 - Check A: No banned patterns (hex, UUID, numeric-dominant, single-letter words).
 - Check B: ≥ 3 non-stop words.
 - Check C: ≥ 50% meaningful word ratio.
+- Check D: ≤ 255 characters (basename, excluding extension).
 
 ## Rules
 

@@ -11,6 +11,7 @@ Applies to all vault-managed filenames in `source/`, `notes/`, `assets/`, `archi
 5. **Lead with the most dominant concept** in the content; follow with other relevant concepts if space allows within the 4-12 word limit.
 6. **Source filenames may be renamed by AI.** Source content must not be modified.
 7. **Generated note filenames must match the note title.** Do not use the source file name as the note filename.
+8. **Maximum 255 characters** — filesystem hard limit. File basename (without extension) must not exceed 255 characters. Shorten by removing the least essential words if exceeded.
 
 ## Source-Note Relationship
 
@@ -57,6 +58,11 @@ meaningful_ratio = (total_words - stop_words) / total_words
 ```
 - ≥ 50% → PASS
 - < 50% → FAIL (too many filter words)
+
+### Check D: Character Limit
+- Count characters in the basename (excluding file extension).
+- ≤ 255 → PASS
+- > 255 → FAIL — filename will be truncated by the filesystem, destroying meaning.
 
 ## Stop Words
 
