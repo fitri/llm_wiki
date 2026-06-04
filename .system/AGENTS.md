@@ -91,7 +91,7 @@ When asked to process the vault or when new files appear in `source/`, run the a
 2. Update the metadata `status` from `new` to `digest`.
 3. Read and analyze the source file content. If the source is a `chats`, `webclip`, or `links` type with conversational content between a human and an LLM, apply the chat processing rules in `.system/skill/source_to_note/SKILL.md`.
 4. Determine knowledge density. Decide how many atomic notes to produce.
-5. Generate one or more notes in `notes/` following `.system/templates/note.md`.
+5. Generate one or more notes in `notes/` following `.system/templates/note.md`. Apply the section selection matrix and conversion rules in `.system/skill/source_to_note/SKILL.md`. Classify each note by type and include only sections with real content.
 6. Derive each note filename from its title by slugifying to lowercase kebab-case.
 7. Assign `categories` and `tags` using the taxonomy indexes. If indexes don't exist, create them following the example templates.
 8. Verify filename-title parity for every generated note — ensure the `slug` field matches the note filename (without `.md`).
@@ -277,8 +277,7 @@ All generated notes must follow `.system/templates/note.md`:
 id: ""
 slug: ""
 date: ""
-categories:
-  -
+categories: ""
 tags:
   -
 summary: ""
@@ -286,23 +285,64 @@ summary: ""
 
 # {{title}}
 
-## Summary
-
-{{summary}}
+## ✦ TL;DR
+- {{Key insight — one sentence}}
+- {{Key insight 2}}
+- {{Key insight 3}}
 
 ---
 
-## Core Concepts
+## Key points
 
-- Concept 1
-- Concept 2
-- Concept 3
+- **{{Core term}}**: {{What it means or why it matters}}
+- **{{Core term}}**: {{One idea only}}
+
+---
+
+## Steps
+
+> **Prerequisites**: {{what must be true / installed / set up before starting}}
+
+1. {{First action — imperative verb ("Run", "Open", "Set")}}
+2. {{Second action}}
+   - {{Sub-step if needed}}
+3. {{Third action}}
+
+> **Expected result**: {{what success looks like}}
+
+---
+
+## Debugging
+
+| Symptom | Cause | Fix |
+|---|---|---|
+| `{{error or behaviour}}` | {{why it happens}} | {{command, setting, or workaround}} |
+
+**What didn't work:**
+- {{Attempted fix}} — {{why it failed or what it revealed}}
+
+---
+
+## Code / examples
+
+```{{lang}}
+{{snippet}}
+```
 
 ---
 
 ## Details
 
-Main knowledge content.
+### {{Subtopic — only if source has distinct concepts worth separating}}
+
+{{2–3 sentences max, then bullets. Prefer bullets over paragraphs.}}
+
+---
+
+## Open questions
+
+- {{What this note doesn't answer}}
+- {{What would change if a key assumption were wrong}}
 ```
 
 ---
@@ -348,7 +388,7 @@ The vault has four specialized agents, each with a corresponding skill file:
 - Update metadata status to `digest`.
 - Extract and analyze content.
 - Determine knowledge density and decide note count.
-- Generate notes following `.system/templates/note.md`.
+- Generate notes following `.system/templates/note.md`. Classify note type, select sections per the matrix in the skill file, apply conversion rules #1–11. Omit sections with no source content.
 - Derive filename from title (slugify to lowercase kebab-case).
 - Assign categories and tags from taxonomy indexes.
 - Generate summaries.
@@ -426,7 +466,7 @@ These checks are enforced by the **Health Check Agent**. Additional checks:
 - Stalled processing — metadata sidecars stuck at `status: digest`.
 - Orphan assets — files in `assets/` not referenced by any note.
 - Taxonomy drift — duplicate or near-duplicate category/tag entries.
-- Frontmatter and body section violations — notes missing required frontmatter fields, body sections, or having invalid YAML.
+- Frontmatter and body section violations — notes missing required frontmatter fields, missing `✦ TL;DR` body section, empty/filler sections, or having invalid YAML.
 - Stale notes — notes that have not been updated in a long time.
 
 The health check produces a report at `.digest/vault-health-check-report.md`.

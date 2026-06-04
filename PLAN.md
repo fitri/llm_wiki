@@ -367,8 +367,7 @@ File: `.system/templates/note.md`
 id: ""
 slug: ""
 date: ""
-categories:
-  -
+categories: ""
 tags:
   -
 summary: ""
@@ -376,23 +375,64 @@ summary: ""
 
 # {{title}}
 
-## Summary
-
-{{summary}}
+## ✦ TL;DR
+- {{Key insight — one sentence}}
+- {{Key insight 2}}
+- {{Key insight 3}}
 
 ---
 
-## Core Concepts
+## Key points
 
-- Concept 1
-- Concept 2
-- Concept 3
+- **{{Core term}}**: {{What it means or why it matters}}
+- **{{Core term}}**: {{One idea only}}
+
+---
+
+## Steps
+
+> **Prerequisites**: {{what must be true / installed / set up before starting}}
+
+1. {{First action — imperative verb ("Run", "Open", "Set")}}
+2. {{Second action}}
+   - {{Sub-step if needed}}
+3. {{Third action}}
+
+> **Expected result**: {{what success looks like}}
+
+---
+
+## Debugging
+
+| Symptom | Cause | Fix |
+|---|---|---|
+| `{{error or behaviour}}` | {{why it happens}} | {{command, setting, or workaround}} |
+
+**What didn't work:**
+- {{Attempted fix}} — {{why it failed or what it revealed}}
+
+---
+
+## Code / examples
+
+```{{lang}}
+{{snippet}}
+```
 
 ---
 
 ## Details
 
-Main knowledge content.
+### {{Subtopic — only if source has distinct concepts worth separating}}
+
+{{2–3 sentences max, then bullets. Prefer bullets over paragraphs.}}
+
+---
+
+## Open questions
+
+- {{What this note doesn't answer}}
+- {{What would change if a key assumption were wrong}}
 ```
 
 ---
@@ -549,7 +589,7 @@ File: `.system/AGENTS.md`
 - Update metadata status to `digest`.
 - Extract and analyze content.
 - Determine knowledge density and decide note count.
-- Generate notes following `.system/templates/note.md`.
+- Generate notes following `.system/templates/note.md`. Classify note type, select sections per the section selection matrix in the skill file, apply conversion rules #1–11. Omit sections with no source content.
 - Derive filename from title (slugify to lowercase kebab-case).
 - Assign categories and tags from taxonomy indexes.
 - Generate summaries.
@@ -577,7 +617,7 @@ File: `.system/AGENTS.md`
 - Detect missing metadata.
 - Detect failed processing.
 - Detect invalid categories and tags.
-- Detect frontmatter YAML violations (invalid YAML, missing fields, empty fields, wrong types, duplicate IDs, missing body sections).
+- Detect frontmatter YAML violations (invalid YAML, missing fields, empty fields, wrong types, duplicate IDs, missing body `✦ TL;DR`, empty/filler sections).
 - Detect filename-title mismatches.
 - Detect stale notes.
 - Detect taxonomy drift.

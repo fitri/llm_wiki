@@ -18,9 +18,8 @@ Maintain vault integrity by detecting and reporting issues.
 - **Frontmatter Field Types** — `categories`, `id`, `slug`, `date`, `summary` must be strings. `tags` must be a list. Wrong types are flagged.
 - **Duplicate IDs** — No two notes may share the same `id`. Report conflicting filenames and the shared ID.
 - **Body Has Title** — Every note must contain a `# <title>` heading on the first content line after the closing `---`. Missing or empty heading text is flagged.
-- **Body Has Summary** — Every note must contain a `## Summary` heading.
-- **Body Has Core Concepts** — Every note must contain a `## Core Concepts` heading.
-- **Body Has Details** — Every note must contain a `## Details` heading.
+- **Body Has TL;DR** — Every note must contain a `## ✦ TL;DR` heading with at least one non-empty bullet.
+- **Body Has No Empty Sections** — No section heading followed immediately by another heading with no content between. No section contains `N/A`, placeholder text, or filler phrases (`"Great question!"`, `"Certainly!"`, `"Sure!"`, `"I'd be happy to"`).
 - **Filename-Title Mismatch** — Detect notes where the `slug` field in frontmatter does not match the note filename (without `.md`).
 - **Stale Notes** — Detect notes that have not been updated in a long time.
 - **Taxonomy Drift** — Detect duplicate or near-duplicate category/tag entries.

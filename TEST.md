@@ -98,7 +98,7 @@ For each of the 5 source files:
 | 5 | Note inherited source ID | At least one note in `notes/` has matching `id` field |
 | 6 | Slug matches filename | Note frontmatter `slug` equals filename without `.md` |
 | 7 | Frontmatter fields | Note has: `id`, `slug`, `date`, `categories`, `tags`, `summary` |
-| 8 | Body sections | Note has: `# Title`, `## Summary`, `## Core Concepts`, `## Details` |
+| 8 | Body sections | Note has: `# Title`, `## ✦ TL;DR`, `## Key points`, no empty/filler sections |
 
 ### C. Taxonomy Validation (2 checks)
 

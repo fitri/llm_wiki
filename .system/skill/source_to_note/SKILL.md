@@ -55,6 +55,43 @@ Prefer fewer high-quality reusable notes over many shallow notes. Do not force-s
 
 Titles must follow `.system/templates/naming-conventions.md`: 4-12 meaningful words, lead with dominant concept. Run the self-check (Checks A/B/C/D in naming-conventions.md) on every title before writing. The title alone should inform what the note is about.
 
+## Section Selection by Note Type
+
+The note generation agent classifies each note into one of six types based on the source content. Only include sections that have real content. Never output a section heading with placeholder text, "N/A", or empty content.
+
+| Note type | Always | + At least one of |
+|-----------|--------|-------------------|
+| General concept / explainer | ✦ TL;DR | Key points, Details |
+| How-to / tutorial | ✦ TL;DR | Key points, Steps |
+| Debugging session | ✦ TL;DR | Debugging, Code |
+| Mixed concept + how-to | ✦ TL;DR | Key points, Steps, Details |
+| Mixed concept + debugging | ✦ TL;DR | Key points, Debugging, Code |
+| Quick reference / cheatsheet | ✦ TL;DR | Key points, Code |
+
+**Omission rules — omit the section entirely if the source has no content for it:**
+- Omit Steps if source has no sequential process.
+- Omit Debugging if source has no errors, symptoms, or troubleshooting.
+- Omit Code if source has no code or commands.
+- Omit Details if key points already cover everything.
+- Omit Open questions if none are apparent from the source.
+
+## Conversion Rules
+
+Never output filler phrases ("Great question!", "Certainly!", "Sure!").
+Never output walls of prose — max 3 sentences before a bullet or break.
+
+1. Collapse each AI assistant turn to 1–3 bullets max. Keep human questions as section context.
+2. Bold the core term at the start of each bullet: `**Term**: explanation`
+3. One idea per bullet. Split if there are two ideas.
+4. If the source has numbered steps, preserve numbering — never flatten to bullets.
+5. Error messages (Error:, TypeError:, FAILED, exit code, etc.) must be wrapped in backticks verbatim — never paraphrase.
+6. Extract "what didn't work" from any human message expressing failure — these are valuable.
+7. Distinguish source content (plain) from annotations (blockquote if needed).
+8. All code blocks must have a language tag (````python, ```bash, etc.).
+9. Every note must be independently readable — no "as mentioned above".
+10. Dates always ISO format (YYYY-MM-DD) in frontmatter.
+11. Source URL preserved verbatim even if content is paraphrased.
+
 ## Chat Processing
 
 When the source type is `chats` or `webclip`, or when a `links` or `text` source contains conversational content between a human user and an LLM, apply the following processing rules.
@@ -127,7 +164,7 @@ Create knowledge details notes, not summaries.
 
 ## Template
 
-All generated notes must follow `.system/templates/note.md`.
+All generated notes must follow `.system/templates/note.md`. Select sections per the **Section Selection by Note Type** matrix above. Apply **Conversion Rules** during generation. Omit any section that has no real content from the source.
 
 ## Output
 
