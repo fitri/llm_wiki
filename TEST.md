@@ -8,7 +8,7 @@ This test validates the full vault pipeline from source drop through metadata ge
 
 **What it tests:**
 - Filename normalization (ALL_CAPS, MixedCase, spaces, generic names)
-- Content-aware file renaming (vague/short names → descriptive 5-15 word names)
+- Content-aware file renaming (vague/short names → descriptive 4-12 word names)
 - Metadata sidecar generation with correct types
 - Atomic note generation following the note template
 - Taxonomy index creation and validation
@@ -32,7 +32,7 @@ Generate 5 source files in `source/` with realistic substantive content. Each fi
 
 ### File 1: `AGENT-SYSTEM-DESIGN-NOTES.md`
 - **Type:** text
-- **Tests:** ALL_CAPS → lowercase kebab normalization
+- **Tests:** ALL_CAPS → lowercase kebab normalization. Name is already descriptive (4 words, note-title quality) so it should be kept after normalization to `agent-system-design-notes.md`, not renamed further.
 - **Content:** Write 3-4 paragraphs about designing AI agent systems — responsibility-based architecture, skill loading patterns, quality assurance checklists.
 
 ### File 2: `My Research on transformer and attention.md`
@@ -118,7 +118,7 @@ For each of the 5 source files:
 
 | # | Source | Expected behavior |
 |---|--------|-------------------|
-| 13 | File 1 | Filename normalized to lowercase. Name may stay similar since `AGENT-SYSTEM-DESIGN-NOTES` is already descriptive. |
+| 13 | File 1 | Filename normalized to lowercase. Current name `AGENT-SYSTEM-DESIGN-NOTES` is already 4 words, descriptive, and carries meaning — kept after normalization. |
 | 14 | File 2 | Renamed. Original `My Research on transformer and attention.md` is too conversational for a vault filename. |
 | 15 | File 3 | Renamed. `clippings.md` is too generic — should be renamed to reflect ChatGPT/knowledge management content. |
 | 16 | File 4 | Renamed. `urls.txt` is too generic — should be renamed to reflect the URL collection topic. |
@@ -131,7 +131,7 @@ Print a summary:
 ```
 Validation Results
 ==================
-Source 1 (AGENT-SYSTEM-DESIGN-NOTES.md): 8/8 ✓  Renamed? normalized
+Source 1 (AGENT-SYSTEM-DESIGN-NOTES.md): 8/8 ✓  Renamed? kept
 Source 2 (My Research on transformer and attention.md): 8/8 ✓  Renamed? yes
 Source 3 (clippings.md): 8/8 ✓  Renamed? yes
 Source 4 (urls.txt): 8/8 ✓  Renamed? yes

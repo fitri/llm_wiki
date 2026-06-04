@@ -16,6 +16,10 @@ Maintain vault integrity by detecting and reporting issues.
 - **Filename-Title Mismatch** — Detect notes where the `slug` field in frontmatter does not match the note filename (without `.md`).
 - **Stale Notes** — Detect notes that have not been updated in a long time.
 - **Taxonomy Drift** — Detect duplicate or near-duplicate category/tag entries.
+- **Naming Convention Violations** — Verify source filenames follow the rules in `.system/templates/naming-conventions.md`:
+  - Lowercase kebab-case format.
+  - 4-12 words.
+  - Passes meaningfulness checks (A: no banned patterns, B: ≥ 3 non-stop words, C: ≥ 50% meaningful ratio). Use the stop-word list in naming-conventions.md for checks B and C.
 
 ## Filename Rules
 

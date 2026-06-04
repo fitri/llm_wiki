@@ -7,14 +7,21 @@ Generate metadata sidecar files for source materials without modifying source fi
 ## Workflow
 
 1. Scan `source/` for files without corresponding `filename.ext.metadata.json`.
-2. **Read and understand the source material.** Determine what the content is about. If the current filename is too short, vague, or underspecified for the content, rename it to a descriptive 5–15 word lowercase kebab-case name. This understanding also informs type classification.
-3. **Normalize the source filename** to lowercase kebab-case. Rename the source file if its name does not follow the naming convention. Do not modify file content.
+2. **Read and understand the source material.** Determine what the content is about. Derive a clear 4-12 word name that describes the source content, following the rename rules in `.system/templates/naming-conventions.md`. Lead with the most dominant concept; follow with other relevant concepts if space allows. If the current filename is already a good descriptive name within 4-12 words, keep it after normalization. Otherwise rename. 3 words or fewer always triggers a rename. This understanding also informs type classification.
+3. **Normalize the source filename** to lowercase kebab-case. Do not modify file content.
 4. For each new file, generate a metadata sidecar using the template at `.system/templates/file.metadata.json`. The metadata filename must match the normalized source filename.
 5. Classify `type` based on file extension and content.
 6. Assign an immutable ID using the ID generation standard.
 7. Set `status` to `new`.
 8. Set `created_at` to current Unix epoch seconds.
 9. Write the metadata sidecar file and mark the source file as ready for processing.
+
+## Self-Check
+
+Before finalizing the renamed source filename, run the meaningfulness checks in `.system/templates/naming-conventions.md`:
+- Check A: No banned patterns (hex, UUID, numeric-dominant, single-letter words).
+- Check B: ≥ 3 non-stop words.
+- Check C: ≥ 50% meaningful word ratio.
 
 ## Rules
 

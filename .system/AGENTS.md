@@ -48,7 +48,8 @@ vault/
     │   ├── note.md
     │   ├── file.metadata.json
     │   ├── categories.example.json
-    │   └── tags.example.json
+    │   ├── tags.example.json
+    │   ├── naming-conventions.md
     ├── skill/
     │   ├── metadata_tagging/SKILL.md
     │   ├── source_to_note/SKILL.md
@@ -76,7 +77,7 @@ When asked to process the vault or when new files appear in `source/`, run the a
 ### Step 1: Metadata Tagging
 
 1. Scan `source/` for files without a corresponding `filename.ext.metadata.json` sidecar.
-2. **Read and understand the source material.** Determine what the content is about. If the current filename does not accurately describe the content — or is too short, vague, or underspecified (e.g. single words, generic names) — rename it to a descriptive 5–15 word lowercase kebab-case name that reflects the content. This understanding also informs type classification.
+2. **Read and understand the source material.** Determine what the content is about. Derive a clear 4-12 word descriptive name following the rename rules in `.system/templates/naming-conventions.md`. If the current filename is not already a good descriptive name within 4-12 words, rename it. This understanding also informs type classification.
 3. Normalize source filenames to lowercase kebab-case. Do not modify file content.
 4. For each new file, generate a metadata sidecar using `.system/templates/file.metadata.json`.
 5. Classify the `type` based on file extension and content.
@@ -189,26 +190,13 @@ No vault lookup is required. No duplicate checking is required.
 
 ## Naming Conventions
 
-All vault-managed filenames use lowercase kebab-case. Words are separated by hyphens.
+All vault-managed filenames follow the complete rules in `.system/templates/naming-conventions.md`.
 
-**Rules:**
-
-1. Use lowercase letters.
-2. Use `-` between words.
-3. Do not use spaces.
-4. Do not use underscores in filenames.
-5. Do not use special characters unless required by the file extension.
-6. Generated note filenames must match the note title. Derive the filename by slugifying the title to lowercase kebab-case. Do not use the source file name as the note filename.
-7. Source file content must not be edited, but source filenames may be normalized or renamed by AI when organizing the vault.
-
-**Examples:**
-
-```text
-source/my-downloaded-manual.pdf
-notes/how-transformer-attention-works.md
-assets/transformer-attention-diagram.png
-archive/old-semiconductor-reference.md
-```
+**Key rules (summary):**
+- Lowercase kebab-case, hyphens between words, no spaces or underscores.
+- 4-12 descriptive words. All words must carry meaning. 3 words or fewer always triggers a rename.
+- Lead with the most dominant concept. Follow with other relevant concepts if space allows.
+- Source and note filenames are independent — connected by the shared `id`, not by filename similarity.
 
 ---
 
@@ -250,19 +238,23 @@ Prefer fewer high-quality reusable notes over many shallow notes. Do not force-s
 
 ### Title Rules
 
-Note titles must be descriptive. Avoid single-word titles unless the word is a recognized proper name (e.g. "Rclone", "LiteLLM"). Keep titles concise: less than 18 words, but aim for fewer. The title alone should inform what the note is about.
+Note titles must follow the rules in `.system/templates/naming-conventions.md`:
+- 4-12 words, all meaningful.
+- Lead with the most dominant concept.
+- Run the meaningfulness self-check (banned patterns, ≥ 3 non-stop words, ≥ 50% meaningful ratio) on every title before writing.
+- The title alone should inform what the note is about.
 
 **Examples:**
 
 ```text
-Good: How Transformer Attention Works    (4 words, descriptive)
-Bad:  Transformer                         (too vague, single word)
+Good: how-transformer-attention-works-internally    (5 words, meaningful)
+Bad:  transformer                                    (1 word, too vague)
 
-Good: Rclone Virtual Backends            (3 words, descriptive)
-Bad:  Virtual Backends                    (doesn't name the tool)
+Good: rclone-virtual-backends-explained             (4 words, passes 4-word minimum)
+Bad:  rclone-virtual-backends                        (3 words, under minimum)
 
-Good: Container Orchestration with Kubernetes  (4 words)
-Bad:  A Comprehensive Guide to Container Orchestration Using Kubernetes  (10 words, padded)
+Good: container-orchestration-with-kubernetes       (4 words, 1 stop = 75% meaningful)
+Bad:  a-comprehensive-guide-to-container-orchestration  (7 words, 3 stops = 57%, padded)
 ```
 
 ### Note Template
@@ -330,11 +322,11 @@ The vault has four specialized agents, each with a corresponding skill file:
 ### Metadata Agent
 
 - Scan `source/` for new files.
-- Read and understand source content to evaluate filenames and classify types.
-- Rename source files to descriptive 5–15 word lowercase kebab-case names when the current name is vague or underspecified.
+- Read and understand source content. Derive a 4-12 word descriptive name following `.system/templates/naming-conventions.md`. Rename only if the current name is not already a good descriptive name.
+- Normalize filenames to lowercase kebab-case.
 - Generate `filename.ext.metadata.json` sidecars.
 - Classify `type`.
-- Assign immutable IDs.
+- Assign immutable IDs (after rename and normalization).
 - Never modify source file content.
 
 **Skill file:** `.system/skill/metadata_tagging/SKILL.md`
@@ -395,7 +387,7 @@ The vault has four specialized agents, each with a corresponding skill file:
 13. The `slug` field in frontmatter must match the note filename (without `.md`).
 14. Search and metadata are primary retrieval methods.
 15. Folder hierarchy must not be used for organization.
-16. Note titles must be descriptive. Avoid single-word titles unless the word is a recognized proper name. Less than 18 words; aim for fewer, not more. The title alone should inform what the note is about.
+16. Note titles must follow `.system/templates/naming-conventions.md`: 4-12 meaningful words, lead with dominant concept, pass meaningfulness self-check. The title alone should inform what the note is about.
 17. Note filenames must match note titles. Derive the filename by slugifying the title to lowercase kebab-case and appending `.md`. Do not use the source file name as the note filename.
 
 ---
@@ -406,11 +398,14 @@ Every processed note must pass these checks before the vault is considered healt
 
 1. **Metadata Sidecar Exists** — Every source file has a `filename.ext.metadata.json` sidecar.
 2. **Metadata Status is Publish** — The sidecar `status` is `publish`.
-3. **Note Title is Descriptive** — Title avoids single-word (unless proper name), is less than 18 words.
+3. **Note Title Follows Naming Rules** — Title is 4-12 words (mechanical check). All words must be meaningful (generation rule, not health-checked).
 4. **Slug Matches Filename** — The `slug` field in frontmatter matches the note filename (without `.md`).
 5. **Categories Exist in Taxonomy** — All note categories are present in `categories.index.json`.
 6. **Tags Exist in Taxonomy** — All note tags are present in `tags.index.json`.
 7. **Source Content Not Modified** — The original source file was never edited.
+8. **No Banned Patterns** — Title/source filename contains no hex strings, UUIDs, numeric-dominant words, or single-letter words (see `.system/templates/naming-conventions.md` Check A).
+9. **Minimum Meaningful Words** — Title/source filename has ≥ 3 non-stop words (see naming-conventions.md Check B).
+10. **Stop-Word Ratio** — Title/source filename has ≥ 50% meaningful words (see naming-conventions.md Check C).
 
 These checks are enforced by the **Health Check Agent**. Additional checks:
 - Stalled processing — metadata sidecars stuck at `status: digest`.
