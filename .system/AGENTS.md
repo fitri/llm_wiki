@@ -91,7 +91,7 @@ When asked to process the vault or when new files appear in `source/`, run the a
 2. Update the metadata `status` from `new` to `digest`.
 3. Read and analyze the source file content. If the source is a `chats`, `webclip`, or `links` type with conversational content between a human and an LLM, apply the chat processing rules in `.system/skill/source_to_note/SKILL.md`.
 4. Determine knowledge density. Decide how many atomic notes to produce.
-5. Generate one or more notes in `notes/` following `.system/templates/note.md`. Apply the section selection matrix and conversion rules in `.system/skill/source_to_note/SKILL.md`. Classify each note by type and include only sections with real content.
+5. Generate one or more notes in `notes/` following `.system/templates/note.md`. Apply the section selection matrix and conversion rules #1–13 in `.system/skill/source_to_note/SKILL.md`. Classify each note by type and include only sections with real content.
 6. Derive each note filename from its title by slugifying to lowercase kebab-case.
 7. Assign `categories` and `tags` using the taxonomy indexes. If indexes don't exist, create them following the example templates.
 8. Verify filename-title parity for every generated note — ensure the `slug` field matches the note filename (without `.md`).
@@ -388,7 +388,7 @@ The vault has four specialized agents, each with a corresponding skill file:
 - Update metadata status to `digest`.
 - Extract and analyze content.
 - Determine knowledge density and decide note count.
-- Generate notes following `.system/templates/note.md`. Classify note type, select sections per the matrix in the skill file, apply conversion rules #1–11. Omit sections with no source content.
+- Generate notes following `.system/templates/note.md`. Classify note type, select sections per the matrix in the skill file, apply conversion rules #1–13. Omit sections with no source content.
 - Derive filename from title (slugify to lowercase kebab-case).
 - Assign categories and tags from taxonomy indexes.
 - Generate summaries.

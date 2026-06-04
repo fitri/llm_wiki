@@ -84,13 +84,15 @@ Never output walls of prose — max 3 sentences before a bullet or break.
 2. Bold the core term at the start of each bullet: `**Term**: explanation`
 3. One idea per bullet. Split if there are two ideas.
 4. If the source has numbered steps, preserve numbering — never flatten to bullets.
-5. Error messages (Error:, TypeError:, FAILED, exit code, etc.) must be wrapped in backticks verbatim — never paraphrase.
+5. Technical values must be wrapped in backticks — never paraphrase them. This includes: error messages (`Error:`, `TypeError:`), file paths (`/etc/config.conf`), shell commands (`kubectl apply`), environment variables (`$HOME`), port numbers (`8080`), config values, and version strings.
 6. Extract "what didn't work" from any human message expressing failure — these are valuable.
 7. Distinguish source content (plain) from annotations (blockquote if needed).
 8. All code blocks must have a language tag (````python, ```bash, etc.).
 9. Every note must be independently readable — no "as mentioned above".
 10. Dates always ISO format (YYYY-MM-DD) in frontmatter.
 11. Source URL preserved verbatim even if content is paraphrased.
+12. Use `<kbd>` tags for keyboard shortcuts: `<kbd>Ctrl</kbd>+<kbd>C</kbd>`.
+13. Use footnotes `[^1]` for citations, page references, and source attributions. Define footnotes at the end of the section they appear in.
 
 ## Chat Processing
 
@@ -164,7 +166,7 @@ Create knowledge details notes, not summaries.
 
 ## Template
 
-All generated notes must follow `.system/templates/note.md`. Select sections per the **Section Selection by Note Type** matrix above. Apply **Conversion Rules** during generation. Omit any section that has no real content from the source.
+All generated notes must follow `.system/templates/note.md`. Select sections per the **Section Selection by Note Type** matrix above. Apply **Conversion Rules #1–13** during generation. Omit any section that has no real content from the source.
 
 ## Output
 

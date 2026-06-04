@@ -589,7 +589,7 @@ File: `.system/AGENTS.md`
 - Update metadata status to `digest`.
 - Extract and analyze content.
 - Determine knowledge density and decide note count.
-- Generate notes following `.system/templates/note.md`. Classify note type, select sections per the section selection matrix in the skill file, apply conversion rules #1–11. Omit sections with no source content.
+- Generate notes following `.system/templates/note.md`. Classify note type, select sections per the section selection matrix in the skill file, apply conversion rules #1–13. Omit sections with no source content.
 - Derive filename from title (slugify to lowercase kebab-case).
 - Assign categories and tags from taxonomy indexes.
 - Generate summaries.
@@ -617,7 +617,7 @@ File: `.system/AGENTS.md`
 - Detect missing metadata.
 - Detect failed processing.
 - Detect invalid categories and tags.
-- Detect frontmatter YAML violations (invalid YAML, missing fields, empty fields, wrong types, duplicate IDs, missing body `✦ TL;DR`, empty/filler sections).
+- Detect frontmatter YAML violations (invalid YAML, missing fields, empty fields, wrong types, duplicate IDs, missing body `✦ TL;DR`, empty/filler sections, code blocks without language tags).
 - Detect filename-title mismatches.
 - Detect stale notes.
 - Detect taxonomy drift.

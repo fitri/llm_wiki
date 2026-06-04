@@ -20,6 +20,7 @@ Maintain vault integrity by detecting and reporting issues.
 - **Body Has Title** — Every note must contain a `# <title>` heading on the first content line after the closing `---`. Missing or empty heading text is flagged.
 - **Body Has TL;DR** — Every note must contain a `## ✦ TL;DR` heading with at least one non-empty bullet.
 - **Body Has No Empty Sections** — No section heading followed immediately by another heading with no content between. No section contains `N/A`, placeholder text, or filler phrases (`"Great question!"`, `"Certainly!"`, `"Sure!"`, `"I'd be happy to"`).
+- **Code Block Language Tags** — Every fenced code block (````) must have a language identifier immediately after the opening backticks. Flag bare ` ``` ` with no language tag (e.g. ` ```\n` without `python`, `bash`, etc.).
 - **Filename-Title Mismatch** — Detect notes where the `slug` field in frontmatter does not match the note filename (without `.md`).
 - **Stale Notes** — Detect notes that have not been updated in a long time.
 - **Taxonomy Drift** — Detect duplicate or near-duplicate category/tag entries.
