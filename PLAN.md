@@ -683,7 +683,7 @@ File: `.system/AGENTS.md`
 8. Prefer factual statements.
 9. Prefer permanent knowledge over temporary observations.
 10. Every note must contain a summary.
-11. Every note must have categories and tags.
+11. Every note must have a single category and tags.
 12. Every note must have a unique ID.
 13. The `slug` field in frontmatter must match the note filename (without `.md`).
 14. Search and metadata are primary retrieval methods.
@@ -701,7 +701,7 @@ Every processed note must pass these automated checks before the vault is consid
 2. **Metadata Status is Publish** — The sidecar status is `publish`.
 3. **Note Title is Descriptive** — Title is 4-12 words (mechanical check). All words must be meaningful (generation rule, not health-checked).
 4. **Slug Matches Filename** — The `slug` field in frontmatter matches the note filename (without `.md`).
-5. **Categories Exist in Taxonomy** — All note categories are present in `categories.index.json`.
+5. **Categories Exist in Taxonomy** — The note's category is present in `categories.index.json`.
 6. **Tags Exist in Taxonomy** — All note tags are present in `tags.index.json`.
 7. **Source Content Not Modified** — The original source file was never edited.
 8. **No Banned Patterns** — Title/source filename contains no hex strings, UUIDs, numeric-dominant words, or single-letter words.

@@ -2,8 +2,7 @@
 id: ""
 slug: ""
 date: ""
-categories:
-  -
+categories: ""
 tags:
   -
 summary: ""
